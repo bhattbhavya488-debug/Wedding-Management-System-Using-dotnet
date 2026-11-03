@@ -1,0 +1,74 @@
+@model IEnumerable<WeddingManagementSystem.Models.ServiceItem>
+@{
+    ViewData["Title"] = "Our Wedding Services";
+}
+
+<div class="py-5 bg-white border-bottom">
+    <div class="container text-center">
+        <span class="badge badge-gold px-3 py-1 mb-2">Excellence in Every Detail</span>
+        <h1 class="display-5 fw-bold">Curated Wedding Services</h1>
+        <p class="text-muted mx-auto lead" style="max-width: 650px;">
+            Comprehensive wedding management services designed to ensure every ritual, melody, and culinary delicacy is celebrated seamlessly.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6">
+                <div class="service-card p-4">
+                    <div class="service-icon-box mb-3">
+                        <i class="bi @item.IconClass"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">@item.Name</h4>
+                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 mb-3 px-3 py-1">@item.Category</span>
+                    <p class="text-muted small mb-4">@item.Description</p>
+                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">Packages from</span>
+                        <span class="fw-bold text-danger fs-5">₹@item.StartingPrice.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Wedding Planning Process -->
+    <div class="mt-5 p-5 rounded-4" style="background: linear-gradient(135deg, #fdf8f3, #faedd9); border: 1px solid rgba(197, 155, 39, 0.2);">
+        <div class="text-center mb-5">
+            <span class="badge badge-gold px-3 py-1 mb-2">Our Process</span>
+            <h2 class="fw-bold">How We Bring Your Wedding to Life</h2>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold fs-4 text-danger">1</span>
+                </div>
+                <h6 class="fw-bold">Discovery & Theme</h6>
+                <p class="small text-muted">Initial consultation to discover your vision, budget, and ceremonial customs.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold fs-4 text-danger">2</span>
+                </div>
+                <h6 class="fw-bold">Package & Venue</h6>
+                <p class="small text-muted">Select an all-inclusive package or customize individual vendor services.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold fs-4 text-danger">3</span>
+                </div>
+                <h6 class="fw-bold">Execution & Rehearsal</h6>
+                <p class="small text-muted">Detailed coordination with caterers, decorators, choreographers, and artists.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                    <span class="fw-bold fs-4 text-danger">4</span>
+                </div>
+                <h6 class="fw-bold">The Big Day</h6>
+                <p class="small text-muted">Relax and cherish your memories while our concierge manages everything flawlessly.</p>
+            </div>
+        </div>
+    </div>
+</div>

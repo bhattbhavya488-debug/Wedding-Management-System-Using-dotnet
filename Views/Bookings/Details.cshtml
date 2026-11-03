@@ -1,0 +1,162 @@
+@model WeddingManagementSystem.Models.Booking
+@{
+    ViewData["Title"] = "Booking Invoice - #" + Model.BookingNumber;
+}
+
+<div class="py-4 bg-white border-bottom d-print-none">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-1">
+                        <li class="breadcrumb-item"><a asp-action="Index">Bookings</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Invoice #@Model.BookingNumber</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">Booking Confirmation & Invoice</h3>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <button onclick="window.print()" class="btn btn-outline-dark btn-sm">
+                    <i class="bi bi-printer me-1"></i> Print Invoice
+                </button>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Bookings" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Admin Bookings
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Back to My Bookings
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border border-warning border-opacity-50">
+                <!-- Invoice Header -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center pb-4 mb-4 border-bottom">
+                    <div>
+                        <h2 class="brand-font mb-1 text-danger">
+                            <i class="bi bi-gem text-warning me-1"></i> Royal Knot Weddings
+                        </h2>
+                        <p class="text-muted small mb-0">Ahmedabad, Gujarat | Contact: +91 98765 43210</p>
+                    </div>
+                    <div class="text-md-end mt-3 mt-md-0">
+                        <h4 class="fw-bold mb-1">INVOICE / RECEIPT</h4>
+                        <div class="small text-muted"><strong>Booking No:</strong> @Model.BookingNumber</div>
+                        <div class="small text-muted"><strong>Booked On:</strong> @Model.BookingDate.ToString("dd MMMM yyyy, hh:mm tt")</div>
+                        <div class="mt-2">
+                            @switch (Model.Status)
+                            {
+                                case "Confirmed":
+                                    <span class="badge-status-confirmed fs-6"><i class="bi bi-check-circle-fill me-1"></i> Confirmed</span>
+                                    break;
+                                case "Pending":
+                                    <span class="badge-status-pending fs-6"><i class="bi bi-hourglass-split me-1"></i> Pending Verification</span>
+                                    break;
+                                case "Completed":
+                                    <span class="badge-status-completed fs-6"><i class="bi bi-patch-check-fill me-1"></i> Event Completed</span>
+                                    break;
+                                default:
+                                    <span class="badge-status-cancelled fs-6"><i class="bi bi-x-circle-fill me-1"></i> Cancelled</span>
+                                    break;
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer and Event Details -->
+                <div class="row g-4 mb-4 pb-4 border-bottom">
+                    <div class="col-md-6">
+                        <h6 class="text-uppercase text-muted fw-bold small mb-2">Customer Details</h6>
+                        <div class="fw-bold fs-5">@(Model.User?.FullName ?? "Valued Client")</div>
+                        <div class="text-muted small"><i class="bi bi-envelope me-1"></i> @(Model.User?.Email ?? "N/A")</div>
+                        <div class="text-muted small"><i class="bi bi-telephone me-1"></i> @(Model.User?.PhoneNumber ?? "N/A")</div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <h6 class="text-uppercase text-muted fw-bold small mb-2">Wedding Schedule</h6>
+                        <div class="fw-bold fs-5 text-danger"><i class="bi bi-calendar-heart me-1"></i> @Model.EventDate.ToString("dddd, dd MMMM yyyy")</div>
+                        <div class="text-muted small"><i class="bi bi-people me-1"></i> Expected Guests: <strong>@Model.GuestCount Persons</strong></div>
+                    </div>
+                </div>
+
+                <!-- Package & Pricing Breakdown -->
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Item Description</th>
+                                <th class="text-center" style="width: 15%;">Guests</th>
+                                <th class="text-end" style="width: 25%;">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">@(Model.Package?.Name ?? "Wedding Package")</div>
+                                    <small class="text-muted">Category: @(Model.Package?.Category ?? "Custom") Wedding Ceremony</small>
+                                    @if (!string.IsNullOrEmpty(Model.Package?.Features))
+                                    {
+                                        <div class="small text-muted mt-1">
+                                            <em>Includes: @Model.Package.Features</em>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-center">@Model.GuestCount</td>
+                                <td class="text-end fw-bold">₹@Model.TotalAmount.ToString("N0")</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-end fw-semibold">Dedicated Concierge & Coordinator Service:</td>
+                                <td class="text-end text-success fw-bold">INCLUDED (₹0)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-end fw-semibold">Government Service Taxes (GST):</td>
+                                <td class="text-end text-muted">INCLUDED (₹0)</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td colspan="2" class="text-end fw-bold fs-5">Total Investment:</td>
+                                <td class="text-end fw-bold fs-5 text-danger">₹@Model.TotalAmount.ToString("N0")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Special Requests -->
+                @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+                {
+                    <div class="p-3 bg-light rounded-3 border mb-4">
+                        <h6 class="fw-bold mb-1"><i class="bi bi-chat-quote-fill text-warning me-2"></i> Client Notes / Special Instructions:</h6>
+                        <p class="small text-muted mb-0">@Model.SpecialRequests</p>
+                    </div>
+                }
+
+                <!-- Footer Terms & Actions -->
+                <div class="row align-items-center pt-3 border-top">
+                    <div class="col-md-8">
+                        <p class="small text-muted mb-0">
+                            <strong>Note:</strong> This is an electronically generated booking confirmation voucher issued by Royal Knot Weddings Pvt. Ltd. Retain this booking reference for all ceremonial coordination.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-print-none">
+                        @if (Model.Status == "Pending")
+                        {
+                            <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-x-circle me-1"></i> Cancel Reservation
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

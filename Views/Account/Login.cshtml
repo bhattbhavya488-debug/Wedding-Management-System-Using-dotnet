@@ -1,0 +1,67 @@
+@model WeddingManagementSystem.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Sign In - Royal Knot";
+}
+
+<div class="py-5" style="background: radial-gradient(circle at top, #fdf2f4, #faf8f5);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="glass-auth-card">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-gem fs-1" style="color: var(--accent-gold);"></i>
+                        <h2 class="fw-bold mt-2">Welcome Back</h2>
+                        <p class="text-muted small">Sign in to manage your wedding bookings & services</p>
+                    </div>
+
+
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" id="loginEmail" class="form-control" placeholder="name@example.com" autofocus />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-key"></i></span>
+                                <input asp-for="Password" id="loginPassword" type="password" class="form-control" placeholder="••••••••" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label text-muted small">Remember me on this browser</label>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-royal btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In to Account
+                            </button>
+                        </div>
+
+                        <div class="text-center small text-muted">
+                            Don't have an account? <a asp-action="Register" class="text-danger fw-bold text-decoration-none">Create a Free Account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

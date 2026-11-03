@@ -1,0 +1,76 @@
+@model IEnumerable<WeddingManagementSystem.Models.ContactMessage>
+@{
+    ViewData["Title"] = "Customer Inquiries - Admin Portal";
+}
+
+<div class="py-4 bg-white border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-1">
+                        <li class="breadcrumb-item"><a asp-action="Index">Admin Panel</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Inquiries</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold mb-0">Customer Inquiries & Messages</h2>
+                <p class="text-muted small mb-0">Submissions received through the Contact Concierge form.</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-white rounded-4 border">
+            <i class="bi bi-inbox text-muted display-4 mb-3"></i>
+            <h5>No inquiries received yet</h5>
+            <p class="text-muted">Inquiries sent from the Contact page will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var msg in Model)
+            {
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 @(msg.IsRead ? "bg-white" : "border-start border-4 border-warning bg-light")">
+                        <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="fw-bold mb-1">@msg.Subject</h5>
+                                <div class="small text-muted">
+                                    From: <strong>@msg.Name</strong> &lt;@msg.Email&gt; &bull; Received on @msg.SubmittedAt.ToString("dd MMM yyyy, hh:mm tt")
+                                </div>
+                            </div>
+                            <div>
+                                @if (msg.IsRead)
+                                {
+                                    <span class="badge bg-light text-muted border"><i class="bi bi-check2-all me-1"></i> Read</span>
+                                }
+                                else
+                                {
+                                    <form asp-action="MarkMessageAsRead" asp-route-id="@msg.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-check-lg me-1"></i> Mark as Read
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white rounded-3 border mt-3 text-secondary">
+                            @msg.Message
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

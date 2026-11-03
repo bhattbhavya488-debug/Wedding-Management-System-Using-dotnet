@@ -1,0 +1,120 @@
+@model WeddingManagementSystem.Models.ViewModels.BookingCreateViewModel
+@{
+    ViewData["Title"] = "Book Wedding Package - Royal Knot";
+}
+
+<div class="py-5" style="background: linear-gradient(135deg, #fdf2f4, #fff9f0); border-bottom: 1px solid rgba(197, 155, 39, 0.2);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb small mb-2">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Packages" asp-action="Index">Packages</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Book Package</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 fw-bold mb-1">Book Your Wedding Package</h1>
+        <p class="text-muted mb-0">Fill in your wedding details to confirm your reservation.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5 justify-content-center">
+        <!-- Package Summary Side Card -->
+        <div class="col-lg-5 order-lg-2">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="border: 1px solid rgba(197, 155, 39, 0.25) !important;">
+                <img src="@Model.ImageUrl" alt="@Model.PackageName" style="height: 220px; object-fit: cover;" />
+                <div class="p-4 bg-white">
+                    <span class="badge badge-gold px-3 py-1 mb-2">Selected Package</span>
+                    <h4 class="heading-serif mb-2">@Model.PackageName</h4>
+                    
+                    <div class="d-flex justify-content-between text-muted small py-2 border-top border-bottom mb-3">
+                        <span>Max Capacity: <strong>@Model.MaxGuests Guests</strong></span>
+                        <span class="text-success"><i class="bi bi-shield-check me-1"></i> Verified Package</span>
+                    </div>
+
+                    <div class="p-3 rounded-3" style="background: #faf5eb;">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Package Price:</span>
+                            <span class="fw-bold">₹@Model.PackagePrice.ToString("N0")</span>
+                        </div>
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Concierge & Coordination:</span>
+                            <span class="text-success fw-bold">FREE</span>
+                        </div>
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Taxes & Service Fees:</span>
+                            <span class="text-muted">Included</span>
+                        </div>
+                        <hr class="my-2 border-warning" />
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total Booking Investment:</span>
+                            <span class="text-danger fs-5">₹@Model.PackagePrice.ToString("N0")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="col-lg-7 order-lg-1">
+            <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+                <h4 class="fw-bold mb-4"><i class="bi bi-calendar2-heart text-danger me-2"></i> Wedding Ceremony Details</h4>
+
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="PackageId" />
+                    <input type="hidden" asp-for="PackageName" />
+                    <input type="hidden" asp-for="PackagePrice" />
+                    <input type="hidden" asp-for="MaxGuests" />
+                    <input type="hidden" asp-for="ImageUrl" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="EventDate" class="form-label fw-semibold">Auspicious Wedding Date <span class="text-danger">*</span></label>
+                            <input asp-for="EventDate" type="date" class="form-control" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="EventDate" class="text-danger small"></span>
+                            <small class="text-muted">Please select a future date</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="GuestCount" class="form-label fw-semibold">Estimated Guest Count <span class="text-danger">*</span></label>
+                            <input asp-for="GuestCount" type="number" min="10" max="@Model.MaxGuests" class="form-control" />
+                            <span asp-validation-for="GuestCount" class="text-danger small"></span>
+                            <small class="text-muted">Max @Model.MaxGuests guests for this package</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="SpecialRequests" class="form-label fw-semibold">Special Requests / Themes / Ritual Preferences</label>
+                            <textarea asp-for="SpecialRequests" rows="4" class="form-control" placeholder="Specify color themes (e.g. Pastel Pink & Gold), dietary restrictions (e.g. Jain food counter), ritual timings, entry concepts..."></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12 mt-4 pt-3 border-top">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required checked>
+                                <label class="form-check-label small text-muted" for="termsCheck">
+                                    I agree to the wedding event terms and conditions and understand that my booking will be initially marked as <strong>Pending</strong> for concierge verification.
+                                </label>
+                            </div>
+
+                            <div class="d-flex gap-3">
+                                <a asp-controller="Packages" asp-action="Details" asp-route-id="@Model.PackageId" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i> Back to Package
+                                </a>
+                                <button type="submit" class="btn btn-royal btn-lg flex-fill shadow">
+                                    <i class="bi bi-check2-circle me-1"></i> Confirm & Submit Booking
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
